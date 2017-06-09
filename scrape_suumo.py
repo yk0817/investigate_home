@@ -1,7 +1,4 @@
-from bs4 import BeautifulSoup
-import urllib.request
-import sys
-import re
+from common import *
 # webからhtmlを取得する場合
 url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ra=013&rn=0230&ek=023016720&ek=023015340&cb=0.0&ct=9.0&mb=0&mt=9999999&et=9999999&cn=9999999&shkr1=03&shkr2=03&shkr3=03&shkr4=03&sngz=&po1=12&pc=50'
 req = urllib.request.Request(url)
@@ -11,8 +8,6 @@ soup = BeautifulSoup(html, "lxml")
 
 scaped_wrappers = soup.find_all("div", class_="cassetteitem")
 
-# 位置引数から辞書を返す
-# 配列→辞書型にしたい。
 def minutes_dicts(key,text):
     dict = {}
     dict[key] = text
@@ -66,4 +61,5 @@ for scrape in scaped_wrappers:
     # 何個も飽き部屋がある場合があるが今回は
     room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
     dict.update(get_room_spec(room_detail))
+
 
