@@ -17,18 +17,22 @@ def minutes_dicts(key,text):
     dict = {}
     dict[key] = text
     return dict
-
-
-
-
+    
+def year_parse(args):
+    data_dict = {}
+    for arg in args:
+        arg = arg.string
+        data = re.search(r"(\d+)",str(arg))
+        if re.match(r"築",arg):
+            data_dict["contructed_year"] = data.group(0)
+        elif re.search(r"\d+階",arg):
+            data_dict["floor_num"] = data.group(0)
 
 
 for scrape in scaped_wrappers:
     dict = {}
-    address = scrape.find(class_="cassetteitem_detail-col1").string
-    title_content = scrape.find(class_="cassetteitem_content-title").string
-    # 東急田園都市線/三軒茶屋駅 歩9分
-    # 東急世田谷線/西太子堂駅 歩11分
+    dict['address'] = scrape.find(class_="cassetteitem_detail-col1").string
+    dict['title_content'] = scrape.find(class_="cassetteitem_content-title").string
     # 東急世田谷線/若林駅 歩15分←といった情報のため、配列化
     minutes_stations = scrape.find_all(class_="cassetteitem_detail-text")
     count = 1
@@ -38,14 +42,14 @@ for scrape in scaped_wrappers:
         enter_key = base_key + str(count)
         # 結合していく
         dict.update(minutes_dicts(enter_key,minute.string))
-        count += 1
-    
-        
+        count += 1        
     # 配列後置
     # 築〜年という数字、〜階建て
     # 正規表現でメモリー化させる。
-    scrape.find_all(class_="cassetteitem_detail-col3")
+    # data_test = scrape.find_all(class_ = "cassetteitem_detail-col3")
+    data_test = scrape.select(".cassetteitem_detail-col3 > div")
+    # sys.exit()
+    year_parse(data_test)
     # 家賃農法を配列化
     scrape.select(".cassetteitem_other > tbody")
-    
     
