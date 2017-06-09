@@ -18,7 +18,7 @@ def minutes_dicts(key,text):
     dict[key] = text
     return dict
     
-def year_parse(args):
+def get_building_spec(args):
     data_dict = {}
     for arg in args:
         arg = arg.string
@@ -27,7 +27,10 @@ def year_parse(args):
             data_dict["contructed_year"] = data.group(0)
         elif re.search(r"\d+階",arg):
             data_dict["floor_num"] = data.group(0)
-
+    return data_dict
+    
+def get_room_spec(args):
+    data_dict = {}
 
 for scrape in scaped_wrappers:
     dict = {}
@@ -46,10 +49,11 @@ for scrape in scaped_wrappers:
     # 配列後置
     # 築〜年という数字、〜階建て
     # 正規表現でメモリー化させる。
-    # data_test = scrape.find_all(class_ = "cassetteitem_detail-col3")
-    data_test = scrape.select(".cassetteitem_detail-col3 > div")
+    building_spec = scrape.select(".cassetteitem_detail-col3 > div")
     # sys.exit()
-    year_parse(data_test)
-    # 家賃農法を配列化
-    scrape.select(".cassetteitem_other > tbody")
+    dict.update(get_building_spec(building_spec))
+    # 何個も飽き部屋がある場合があるが今回は
+    room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
+    print(room_detail)
+    sys.exit()
     
