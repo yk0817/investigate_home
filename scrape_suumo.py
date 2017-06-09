@@ -31,6 +31,17 @@ def get_building_spec(args):
     
 def get_room_spec(args):
     data_dict = {}
+    data_dict["room_floor"] = args[2].string.replace("階","")
+    data_dict["room_rent"] = args[3].string.replace("万円","")
+    data_dict["admin_expense"] = args[4].string.replace("円","")
+    room_other_price = args[5].string.split("/")
+    if re.match(r"\d+万円",room_other_price[0]):
+        data_dict["room_deposit"] = room_other_price[0].replace("万円","")
+    if re.match(r"\d+万円",room_other_price[1]):
+        data_dict["room_reikinn"] = room_other_price[1].replace("万円","")
+    data_dict["room_plan"] = args[6].string
+    data_dict["room_area"] = args[7].contents[0].replace("m","")
+    return data_dict
 
 for scrape in scaped_wrappers:
     dict = {}
@@ -54,6 +65,6 @@ for scrape in scaped_wrappers:
     dict.update(get_building_spec(building_spec))
     # 何個も飽き部屋がある場合があるが今回は
     room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
-    print(room_detail)
-    sys.exit()
-    
+    dict.update(get_room_spec(room_detail))
+    print(dict)
+
