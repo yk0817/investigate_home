@@ -66,5 +66,4 @@ for scrape in scaped_wrappers:
     # 何個も飽き部屋がある場合があるが今回は
     room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
     dict.update(get_room_spec(room_detail))
-    print(dict)
 
