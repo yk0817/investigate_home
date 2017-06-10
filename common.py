@@ -18,12 +18,12 @@ connection = pymysql.connect(host='localhost',
 
 con = connection.cursor()
 
-print(con.execute('SELECT * FROM house_price'))
-results = cursor.fetchall()
+# print(con.execute('SELECT * FROM house_price'))
+# results = cursor.fetchall()
 
-cols = ORFs.keys()
-vals = ORFs.values()
+# {'room_area': '16.32', 'room_floor': '1', 'floor_num': '4', 'admin_expense': '4000', 'minute_station2': '東急田園都市線/三軒茶屋駅 歩25分', 'room_rent': '4.5', 'minute_station1': '東急世田谷線/世田谷駅 歩2分', 'address': '東京都世田谷区世田谷３', 'title_content': 'スカイコート世田谷', 'contructed_year': '34', 'room_plan': 'ワンルーム', 'minute_station3': '東急田園都市線/駒沢大学駅 歩23分'}
+# cols = ORFs.keys()
+# vals = ORFs.values()
 
 # sqlインサート
-sql = "INSERT INTO %s (%s) VALUES(%s)" % (
-    table, ",".join(cols), ",".join(vals))
+# sql = "INSERT INTO {0} ({1}) VALUES({2})".format(table, ",".join(cols), ",".join(vals))

@@ -61,5 +61,13 @@ for scrape in scaped_wrappers:
     # 何個も飽き部屋がある場合があるが今回は
     room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
     dict.update(get_room_spec(room_detail))
+    cols = dict.keys()
+    vals = dict.values()
+    sql = "INSERT INTO {0} ({1}) VALUES({2})".format("house_price", ",".join(cols), ",".join(vals))
+    con.execute(sql)
+    con.commit()
+
+con.close()
+
 
 
