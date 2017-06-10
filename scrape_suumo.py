@@ -10,7 +10,8 @@ scaped_wrappers = soup.find_all("div", class_="cassetteitem")
 
 def minutes_dicts(key,text):
     dict = {}
-    dict[key] = text
+    if text is not None:
+        dict[key] = "'" + text + "'"
     return dict
     
 def get_building_spec(args):
@@ -28,20 +29,21 @@ def get_room_spec(args):
     data_dict = {}
     data_dict["room_floor"] = args[2].string.replace("階","")
     data_dict["room_rent"] = args[3].string.replace("万円","")
-    data_dict["admin_expense"] = args[4].string.replace("円","")
+    if re.search(r"円",args[4].string):
+        data_dict["admin_expense"] = args[4].string.replace("円","")
     room_other_price = args[5].string.split("/")
     if re.match(r"\d+万円",room_other_price[0]):
         data_dict["room_deposit"] = room_other_price[0].replace("万円","")
     if re.match(r"\d+万円",room_other_price[1]):
         data_dict["room_reikinn"] = room_other_price[1].replace("万円","")
-    data_dict["room_plan"] = args[6].string
+    data_dict["room_plan"] = "'" + args[6].string + "'"
     data_dict["room_area"] = args[7].contents[0].replace("m","")
     return data_dict
 
 for scrape in scaped_wrappers:
     dict = {}
-    dict['address'] = scrape.find(class_="cassetteitem_detail-col1").string
-    dict['title_content'] = scrape.find(class_="cassetteitem_content-title").string
+    dict['address'] = "'" + scrape.find(class_="cassetteitem_detail-col1").string + "'"
+    dict['title_content'] = "'" + scrape.find(class_="cassetteitem_content-title").string + "'"
     # 東急世田谷線/若林駅 歩15分←といった情報のため、配列化
     minutes_stations = scrape.find_all(class_="cassetteitem_detail-text")
     count = 1
@@ -61,13 +63,15 @@ for scrape in scaped_wrappers:
     # 何個も飽き部屋がある場合があるが今回は
     room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
     dict.update(get_room_spec(room_detail))
+    # print(dict)
     cols = dict.keys()
     vals = dict.values()
-    sql = "INSERT INTO {0} ({1}) VALUES({2})".format("house_price", ",".join(cols), ",".join(vals))
+    sql = "INSERT INTO {0} ({1}) VALUES ({2})".format("house_price", ",".join(cols), ",".join(vals))
+    print(sql)
     con.execute(sql)
-    con.commit()
+    connection.commit()
 
-con.close()
+connection.close()
 
 
 
