@@ -51,10 +51,10 @@ def scraped_data_insert_db(scaped_wrappers):
         dict = {}
         dict['address'] = "'" + scrape.find(class_="cassetteitem_detail-col1").string + "'"
         dict['title_content'] = "'" + scrape.find(class_="cassetteitem_content-title").string + "'"
-        # 東急世田谷線/若林駅 歩15分←といった情報のため、配列化
+        # 東急世田谷線/若林駅 歩15分←といった情報を配列化
         minutes_stations = scrape.find_all(class_="cassetteitem_detail-text")
         count = 1
-        # 普通に入れていく。
+        
         for minute in minutes_stations:
             base_key = "minute_station"
             enter_key = base_key + str(count)
@@ -67,7 +67,7 @@ def scraped_data_insert_db(scaped_wrappers):
         building_spec = scrape.select(".cassetteitem_detail-col3 > div")
         # sys.exit()
         dict.update(get_building_spec(building_spec))
-        # 何個も飽き部屋がある場合があるが今回は
+        # 何個も飽き部屋がある場合ケースは無視（ほとんど同じような条件の部屋しかないため、調査(安い家探し)の目的から外れる)
         room_detail = scrape.select(".cassetteitem_other > tbody > tr")[0].select("td")
         dict.update(get_room_spec(room_detail))
         # print(dict)
@@ -78,11 +78,10 @@ def scraped_data_insert_db(scaped_wrappers):
         con.execute(sql)
         connection.commit()
 
-# 終点距離はあえて作らないにした。
 page_num = 1
 
 while(True):
-    # 終点条件を作ったほうがキレイだが、書かないで終わらせる
+    # 終点条件を作ったほうがキレイだが、面倒なんで書かないで終わらせる
     try:
         wrappers = suumo_make_wrappers(suumo_url(page_num))
         scraped_data_insert_db(wrappers)
