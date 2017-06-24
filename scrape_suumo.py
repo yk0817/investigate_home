@@ -1,6 +1,5 @@
 from common import *
 
-
 def key_value_for_dicts(key,text):
     dict = {}
     if text is not None:
@@ -51,8 +50,13 @@ def suumo_make_wrappers(url):
     scaped_wrappers = soup.find_all("div", class_="cassetteitem")
     return scaped_wrappers
     
-def nearest_station_parse(count,dict):
-    if count == 0:
+def nearest_station_parse(station_text,dict):
+    minute_parse_array = station_text.string.split("/")
+    nearest_station = re.search(r"(.+)駅",minute_parse_array[1]).group(0)
+    minutes_from_station = re.search(r"(\d+)",minute_parse_array[1]).group(0)
+    dict.update(key_value_for_dicts("nearest_station",nearest_station))
+    dict.update(key_value_for_dicts("minutes_from_station",minutes_from_station))
+    return dict
         
 
 def scraped_data_insert_db(scaped_wrappers):
@@ -61,21 +65,17 @@ def scraped_data_insert_db(scaped_wrappers):
         dict['address'] = "'" + scrape.find(class_="cassetteitem_detail-col1").string + "'"
         dict['title_content'] = "'" + scrape.find(class_="cassetteitem_content-title").string + "'"
         # 東急世田谷線/若林駅 歩15分←といった情報を配列化
-        minutes_stations = scrape.find_all(class_="cassetteitem_detail-text")
+        station_texts = scrape.find_all(class_="cassetteitem_detail-text")
         count = 1
         
-        for minute in minutes_stations: 
+        for station_text in station_texts: 
             #東急世田谷線/若林駅 歩15分を 1.若林駅と2.15に分割   
             if count == 1:
-                minute_parse_array = minute.string.split("/")
-                nearest_station = re.search(r"(.+)駅",minute_parse_array[1]).group(0)
-                minutes_from_station = re.search(r"(\d+)",minute_parse_array[1]).group(0)
-                dict.update(key_value_for_dicts("nearest_station",nearest_station))
-                dict.update(key_value_for_dicts("minutes_from_station",minutes_from_station))
+                dict = nearest_station_parse(station_text,dict)
             base_key = "minute_station"
             enter_key = base_key + str(count)
             # 結合していく
-            dict.update(key_value_for_dicts(enter_key,minute.string))
+            dict.update(key_value_for_dicts(enter_key,station_text.string))
             count += 1        
         # 配列後置
         # 築〜年という数字、〜階建て
