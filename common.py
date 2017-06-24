@@ -4,6 +4,9 @@ import sys
 import re
 import pymysql.cursors
 import time
+from matplotlib import pyplot
+import numpy as np
+
 # mysql参考
 # http://www.yoheim.net/blog.php?q=20151102
 
