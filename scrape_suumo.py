@@ -1,7 +1,7 @@
 from common import *
 
 
-def minutes_dicts(key,text):
+def key_value_for_dicts(key,text):
     dict = {}
     if text is not None:
         dict[key] = "'" + text + "'"
@@ -35,7 +35,12 @@ def get_room_spec(args):
 
 
 def suumo_url(page_num):
-    url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ra=013&rn=0230&ek=023016720&ek=023015340&cb=0.0&ct=9.0&mb=0&mt=9999999&et=9999999&cn=9999999&shkr1=03&shkr2=03&shkr3=03&shkr4=03&sngz=&po1=12&pc=50&pn=' + str(page_num)
+    # kz = 1 2 3 でパラメータ変更
+    # 1→鉄筋系
+    # 2→鉄骨系
+    # 3→木造系
+    base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&fw2=&pc=50&po1=12&po2=99&ra=013&rn=0230&ek=023016720&ek=023015340&cb=0.0&ct=9.0&et=9999999&mb=0&mt=9999999&cn=9999999&kz=1&shkr1=03&shkr2=03&shkr3=03&shkr4=03&pn='
+    url = base_url + str(page_num)
     return url
 
 def suumo_make_wrappers(url):
@@ -45,6 +50,10 @@ def suumo_make_wrappers(url):
     soup = BeautifulSoup(html, "lxml")
     scaped_wrappers = soup.find_all("div", class_="cassetteitem")
     return scaped_wrappers
+    
+def nearest_station_parse(count,dict):
+    if count == 0:
+        
 
 def scraped_data_insert_db(scaped_wrappers):
     for scrape in scaped_wrappers:
@@ -55,11 +64,18 @@ def scraped_data_insert_db(scaped_wrappers):
         minutes_stations = scrape.find_all(class_="cassetteitem_detail-text")
         count = 1
         
-        for minute in minutes_stations:
+        for minute in minutes_stations: 
+            #東急世田谷線/若林駅 歩15分を 1.若林駅と2.15に分割   
+            if count == 1:
+                minute_parse_array = minute.string.split("/")
+                nearest_station = re.search(r"(.+)駅",minute_parse_array[1]).group(0)
+                minutes_from_station = re.search(r"(\d+)",minute_parse_array[1]).group(0)
+                dict.update(key_value_for_dicts("nearest_station",nearest_station))
+                dict.update(key_value_for_dicts("minutes_from_station",minutes_from_station))
             base_key = "minute_station"
             enter_key = base_key + str(count)
             # 結合していく
-            dict.update(minutes_dicts(enter_key,minute.string))
+            dict.update(key_value_for_dicts(enter_key,minute.string))
             count += 1        
         # 配列後置
         # 築〜年という数字、〜階建て
