@@ -40,7 +40,7 @@ def suumo_url(page_num):
     # 3→木造系
     # 10万以下、
     # 池尻大橋駅、三軒茶屋駅、駒沢大学駅、桜新町駅の賃貸・部屋探し情報　検索結果
-    base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&pc=50&smk=&po1=12&po2=99&kz=1&shkr1=03&shkr2=03&shkr3=03&shkr4=03&rn=0230&ek=023002000&ek=023016720&ek=023015340&ek=023016140&ra=013&ae=02301&cb=0.0&ct=10.0&co=1&et=9999999&mb=0&mt=9999999&cn=9999999&fw2=&pn='
+    base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&pc=50&smk=&po1=12&po2=99&kz=3&shkr1=03&shkr2=03&shkr3=03&shkr4=03&rn=0230&ek=023002000&ek=023016720&ek=023015340&ek=023016140&ra=013&ae=02301&cb=0.0&ct=10.0&co=1&et=9999999&mb=0&mt=9999999&cn=9999999&fw2=&pn='
     url = base_url + str(page_num)
     return url
 
@@ -99,7 +99,6 @@ def scraped_data_insert_db(scaped_wrappers):
         connection.commit()
 
 page_num = 1
-
 while(True):
     try:
         wrappers = suumo_make_wrappers(suumo_url(page_num))
