@@ -20,7 +20,8 @@ connection = pymysql.connect(host='localhost',
                              charset='utf8mb4',
                              # cursorclassを指定することで
                              # Select結果をtupleではなくdictionaryで受け取れる
-                             cursorclass=pymysql.cursors.DictCursor)
+                             cursorclass=pymysql.cursors.DictCursor
+                             )
                             # )
 
 con = connection.cursor()
