@@ -6,6 +6,9 @@ import pymysql.cursors
 import time
 from matplotlib import pyplot
 import numpy as np
+import tensorflow as tf
+import pandas as pd
+
 
 # mysql参考
 # http://www.yoheim.net/blog.php?q=20151102
