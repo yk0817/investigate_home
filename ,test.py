@@ -2,7 +2,7 @@ from common import *
 rng = np.random
 
 learning_rate = 0.01
-training_epochs = 50
+training_epochs = 1000
 display_step = 50
 
 with connection.cursor() as cursor:
@@ -10,9 +10,12 @@ with connection.cursor() as cursor:
     cursor.execute(sql)
     results = cursor.fetchall()
     # 内包表記で計算してみる
-    train_Y = [np.asarray(row['room_rent']) for row in results]
-    train_X = [int(np.asarray(row['room_area'])) for row in results]
-    n_samples = train_X.shape
+    train_Y = [row['room_rent'] for row in results]
+    train_X = [row['room_area'] for row in results]
+    # print(train_X)
+    # print(train_Y)
+    # sys.exit()
+    n_samples = train_X.shape[0]
     X = tf.placeholder("float")
     Y = tf.placeholder("float")
     # Set model weights
