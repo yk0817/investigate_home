@@ -15,6 +15,8 @@ def get_building_spec(args):
             data_dict["contructed_year"] = data.group(0)
         elif re.search(r"\d+階",arg):
             data_dict["floor_num"] = data.group(0)
+        else:
+            data_dict["floor_num"] = "0"
     return data_dict
     
 def get_room_spec(args):
@@ -40,7 +42,9 @@ def suumo_url(page_num):
     # 3→木造系
     # 10万以下、
     # 池尻大橋駅、三軒茶屋駅、駒沢大学駅、桜新町駅の賃貸・部屋探し情報　検索結果
-    base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&pc=50&smk=&po1=12&po2=99&kz=3&shkr1=03&shkr2=03&shkr3=03&shkr4=03&rn=0230&ek=023002000&ek=023016720&ek=023015340&ek=023016140&ra=013&ae=02301&cb=0.0&ct=10.0&co=1&et=9999999&mb=0&mt=9999999&cn=9999999&fw2=&pn='
+    # base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&pc=50&smk=&po1=12&po2=99&kz=3&shkr1=03&shkr2=03&shkr3=03&shkr4=03&rn=0230&ek=023002000&ek=023016720&ek=023015340&ek=023016140&ra=013&ae=02301&cb=0.0&ct=10.0&co=1&et=9999999&mb=0&mt=9999999&cn=9999999&fw2=&pn='
+    # 祐天寺駅、学芸大学駅
+    base_url = 'http://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ra=013&rn=0220&ek=022040640&ek=022007660&cb=0.0&ct=10.0&mb=0&mt=9999999&et=9999999&cn=9999999&kz=1&shkr1=03&shkr2=03&shkr3=03&shkr4=03&sngz=&po1=12&pc=50&pn='
     url = base_url + str(page_num)
     return url
 
@@ -50,6 +54,7 @@ def suumo_make_wrappers(url):
     html = response.read()
     soup = BeautifulSoup(html, "lxml")
     scaped_wrappers = soup.find_all("div", class_="cassetteitem")
+    print(scaped_wrappers)
     return scaped_wrappers
     
 def nearest_station_parse(station_text,dict):
@@ -64,9 +69,11 @@ def nearest_station_parse(station_text,dict):
 def scraped_data_insert_db(scaped_wrappers):
     for scrape in scaped_wrappers:
         dict = {}
-        dict['building_material'] = "'" + "木造" + "'"
+        dict['building_material'] = "'" + "鉄筋系" + "'"
         dict['address'] = "'" + scrape.find(class_="cassetteitem_detail-col1").string + "'"
         dict['title_content'] = "'" + scrape.find(class_="cassetteitem_content-title").string + "'"
+        dict['toyoko_true_or_not'] = '1'
+        print(dict)
         # 東急世田谷線/若林駅 歩15分←といった情報を配列化
         station_texts = scrape.find_all(class_="cassetteitem_detail-text")
         count = 1
@@ -92,7 +99,7 @@ def scraped_data_insert_db(scaped_wrappers):
         # print(dict)
         cols = dict.keys()
         vals = dict.values()
-        print(vals)
+        # print(vals)
         sql = "INSERT INTO {0} ({1}) VALUES ({2})".format("house_price", ",".join(cols), ",".join(vals))
         print(sql)
         con.execute(sql)
