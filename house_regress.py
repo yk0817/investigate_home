@@ -13,9 +13,6 @@ with connection.cursor() as cursor:
     # 内包表記で計算してみる
     train_Y = [row['room_rent'] for row in results]
     train_X = [row['room_area'] for row in results]
-    # print(train_X)
-    # print(train_Y)
-    # sys.exit()
     n_samples = len(train_X)
     X = tf.placeholder("float")
     Y = tf.placeholder("float")
