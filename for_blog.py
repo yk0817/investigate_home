@@ -1,19 +1,28 @@
 
 # coding: utf-8
 
-# In[37]:
+# In[5]:
 
-pyplot.plot(room_area, house_per_price, 'bo', label='plot')
+pyplot.title('N=2820 source:suumo',fontsize=15)
+pyplot.xlabel('X-contructed_year(year)',fontsize=15)
+pyplot.ylabel('Y-room_rent/month)',fontsize=15)
+
+x = np.linspace(0, 50, 10)
+y = np.linspace(0, 10, 10)
+
+for result in results:
+    house_per_price = result['room_rent'] + admin_expense + room_reikinn
+    if result['contructed_year'] is None:
+        contructed_year = 0
+    else:
+        contructed_year = result['contructed_year']
+    pyplot.plot(contructed_year, house_per_price, 'bo', label='test')
+    
 
 
+# ## X軸:建築経過年 Y軸:家賃(含礼金/12、管理費)
 
-pyplot.tick_params(labelsize = 20)
-pyplot.tight_layout()
-pyplot.text(30, 4, 'label', fontsize = 15)
-pyplot.show()
-
-
-# In[36]:
+# In[1]:
 
 from common import *
 
@@ -60,31 +69,11 @@ pyplot.show()
 # connection.close()
 
 
-# In[31]:
-
-pyplot.title('N=2820 source:suumo',fontsize=15)
-pyplot.xlabel('X-contructed_year(year)',fontsize=15)
-pyplot.ylabel('Y-room_rent/month)',fontsize=15)
-
-x = np.linspace(0, 50, 10)
-y = np.linspace(0, 10, 10)
-
-for result in results:
-    house_per_price = result['room_rent'] + admin_expense + room_reikinn
-    if result['contructed_year'] is None:
-        contructed_year = 0
-    else:
-        contructed_year = result['contructed_year']
-    pyplot.plot(contructed_year, house_per_price, 'bo', label='test')
-    
-
-
-# In[ ]:
+# In[3]:
 
 pyplot.title('N=2820 source:suumo',fontsize=15)
 pyplot.xlabel('X-minute_from_station(m)',fontsize=15)
-pyplot.ylabel('Y-roo
-              m_rent/month)',fontsize=15)
+pyplot.ylabel('Y-room_rent/month)',fontsize=15)
 
 x = np.linspace(0, 20, 10)
 y = np.linspace(0, 10, 10)
@@ -95,5 +84,10 @@ for result in results:
     pyplot.plot(minutes_from_station, house_per_price, 'bo', label='plot')
 
 # コネクションクローズ
-connection.close()
+# connection.close()
+
+
+# In[ ]:
+
+
 
