@@ -7,11 +7,13 @@ training_epochs = 1000
 display_step = 50
 
 with connection.cursor() as cursor:
-    sql = "select room_rent,room_area from house_price;"
+    sql = "select \
+           room_rent,room_deposit,room_reikinn,admin_expense,room_area,contructed_year,minutes_from_station, building_material \
+           from house_price where toyoko_true_or_not = 0;"
     cursor.execute(sql)
     results = cursor.fetchall()
     # 内包表記で計算してみる
-    train_Y = [row['room_rent'] for row in results]
+    train_Y = [row['room_rent'] + row['room_deposit'] / 24 + row['room_reikinn'] / 24 + row['admin_expense'] / 10000  for row in results]
     train_X = [row['room_area'] for row in results]
     n_samples = len(train_X)
     X = tf.placeholder("float")
@@ -39,5 +41,6 @@ with connection.cursor() as cursor:
                 print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b))
         print("Optimization Finished!","\n")
         print("Training cost=", training_cost, "W=", sess.run(W), "b=", sess.run(b))
+    
 
 connection.close()

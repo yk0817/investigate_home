@@ -64,6 +64,7 @@ with connection.cursor() as cursor:
         house_per_price = result['room_rent'] + admin_expense + room_reikinn
         room_area = result['room_area']
         building_material = result['building_material']
+        pyplot.
         if building_material == '木造':
             pyplot.plot(room_area, house_per_price, 'ro', label='木造')
         elif building_material == '鉄筋系':            

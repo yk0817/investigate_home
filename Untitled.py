@@ -1,35 +1,41 @@
 
 # coding: utf-8
 
+# In[4]:
+
+
+
+
 # In[ ]:
 
-from bs4 import BeautifulSoup
-import urllib.request
-import sys
-import re
-import pymysql.cursors
-import time
-from matplotlib import pyplot
-import numpy as np
-import tensorflow as tf
-import pandas as pd
+# from bs4 import BeautifulSoup
+# import urllib.request
+# import sys
+# import re
+# import pymysql.cursors
+# import time
+# from matplotlib import pyplot
+# import numpy as np
+# import tensorflow as tf
+# import pandas as pd
 
+from common import *
 
-# mysql参考
-# http://www.yoheim.net/blog.php?q=20151102
+# # mysql参考
+# # http://www.yoheim.net/blog.php?q=20151102
 
-connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='',
-                             db='python_study',
-                             charset='utf8mb4',
-                             # cursorclassを指定することで
-                             # Select結果をtupleではなくdictionaryで受け取れる
-                             cursorclass=pymysql.cursors.DictCursor
-                             )
-                            # )
+# connection = pymysql.connect(host='localhost',
+#                              user='root',
+#                              password='',
+#                              db='python_study',
+#                              charset='utf8mb4',
+#                              # cursorclassを指定することで
+#                              # Select結果をtupleではなくdictionaryで受け取れる
+#                              cursorclass=pymysql.cursors.DictCursor
+#                              )
+#                             # )
 
-con = connection.cursor()
+# con = connection.cursor()
 
 
 get_ipython().magic('matplotlib inline')
@@ -43,6 +49,13 @@ y = np.linspace(0, 10, 10)
 
 # 家賃データを引っ張ってくる。
 with connection.cursor() as cursor:
+#     sql = "select count(*) from house_price where building_material = %s;"
+#     sql = "select count(*) from house_price;"
+    # cursor.execute(sql,'木造')
+#     cursor.execute(sql)
+#     n_count = cursor.fetchall()[0]['count(*)']
+    # print(count[0]['count(*)'])
+    # sql = "select * from house_price where building_material = %s;"
     sql = "select * from house_price;"
     # cursor.execute(sql,'木造')
     cursor.execute(sql)
@@ -79,6 +92,11 @@ pyplot.show()
 # pyplot.savefig('mokuzo.png', dpi=300, orientation='portrait', transparent=False, pad_inches=0.0)
 connection.close()
 
+
+
+
+
+# In[ ]:
 
 
 
