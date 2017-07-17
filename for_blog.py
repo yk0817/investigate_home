@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[5]:
+# In[6]:
 
 pyplot.title('N=2820 source:suumo',fontsize=15)
 pyplot.xlabel('X-contructed_year(year)',fontsize=15)
@@ -20,16 +20,36 @@ for result in results:
     
 
 
-# ## X軸:建築経過年 Y軸:家賃(含礼金/12、管理費)
+# ## X軸:建築経過年 Y軸:家賃(含礼金/24、管理費) 
 
-# In[1]:
+# In[14]:
+
+pyplot.title('N=2820 source:suumo',fontsize=15)
+pyplot.xlabel('X-minute_from_station(m)',fontsize=15)
+pyplot.ylabel('Y-room_rent/month)',fontsize=15)
+
+x = np.linspace(0, 20, 10)
+y = np.linspace(0, 10, 10)
+
+for result in results:
+    house_per_price = result['room_rent'] + admin_expense + room_reikinn
+    minutes_from_station = result['minutes_from_station']
+    pyplot.plot(minutes_from_station, house_per_price, 'bo', label='plot')
+
+# コネクションクローズ
+# connection.close()
+
+
+# ## X軸:最寄り駅への徒歩分 Y軸:家賃(含礼金/24、管理費) 
+
+# In[17]:
 
 from common import *
 
 get_ipython().magic('matplotlib inline')
 
 pyplot.title('N=2820 source:suumo',fontsize=15)
-pyplot.xlabel('X-room_area(m^2)',fontsize=15)
+pyplot.xlabel('X-room_area(m2)',fontsize=15)
 pyplot.ylabel('Y-room_rent/month)',fontsize=15)
 
 x = np.linspace(0, 20, 10)
@@ -69,23 +89,7 @@ pyplot.show()
 # connection.close()
 
 
-# In[3]:
-
-pyplot.title('N=2820 source:suumo',fontsize=15)
-pyplot.xlabel('X-minute_from_station(m)',fontsize=15)
-pyplot.ylabel('Y-room_rent/month)',fontsize=15)
-
-x = np.linspace(0, 20, 10)
-y = np.linspace(0, 10, 10)
-
-for result in results:
-    house_per_price = result['room_rent'] + admin_expense + room_reikinn
-    minutes_from_station = result['minutes_from_station']
-    pyplot.plot(minutes_from_station, house_per_price, 'bo', label='plot')
-
-# コネクションクローズ
-# connection.close()
-
+# ## X軸:専有面積(m2) Y軸:家賃(含礼金/24、管理費) 
 
 # In[ ]:
 
