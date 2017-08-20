@@ -5,7 +5,7 @@
 
 - [suumo]("http://suumo.jp/",summo)のページにある情報をスクレイピング 
 - 情報をDBにまとめる
-- tableauでビジュアル化したい
+- matplotlibでビジュアル化
 
 ### 環境
 
